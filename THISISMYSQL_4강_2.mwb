@@ -1,0 +1,64 @@
+-- 4장 
+-- 데이터 베이스 모델링 ! 
+-- 프로젝트를 떨어지는 폭포수 형태로 운영하는데, 이는 역으로 돌아가는 것이 매우 어려움 <- 폭포수모델
+
+-- 실습 1 쇼핑몰 오픈을 위한 ! 
+-- 고객정보, 이름, 물건 구매 유무, 물건 등의 기록이 필요하겠지
+
+-- 기록된 내역 중 구매 이력이 없는 사람 일부만 정리해서 L자옇 테이블alter
+-- 그 후 중복 정리, 나머지 테이블 자르기 등의 방법으로 할 수 있어
+-- 고객테이블와 구매 테이블을 다양하게 만들어서 연결할 수 있는 1대다 방식
+-- 예 ] 고객은 한명이지만 이 고객이 여러번의 구매를 할 수도 있슴 !!
+-- 그래서 그 관계를 다양하게 생각해주면 좋다
+
+-- 열이름을 영문으로, NULL 등을 지정해주고 데이터 형태를 적용..
+
+
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema modeldb
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema modeldb
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `modeldb` DEFAULT CHARACTER SET utf8 ;
+USE `modeldb` ;
+
+-- -----------------------------------------------------
+-- Table `modeldb`.`usertbl`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `modeldb`.`usertbl` (
+  `username` CHAR(3) NOT NULL,
+  `birthyear` INT NOT NULL,
+  `address` VARCHAR(45) NULL,
+  `phone` INT NOT NULL,
+  PRIMARY KEY (`username`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `modeldb`.`producttbl`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `modeldb`.`producttbl` (
+  `username` CHAR(3) NOT NULL,
+  `productname` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`username`),
+  CONSTRAINT `fk_producttbl_usertbl`
+    FOREIGN KEY (`username`)
+    REFERENCES `modeldb`.`usertbl` (`username`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- 1대 다 관계를 그림으로 그린 후 만들었어요 !!
